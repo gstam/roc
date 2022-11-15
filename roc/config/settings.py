@@ -27,12 +27,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*','192.168.2.79']
-CSRF_TRUSTED_ORIGINS = ['http://coe.dide.ira.net', 'http://192.168.2.79:8000']# Application definition
+CSRF_TRUSTED_ORIGINS = ['http://roc.dide.ira.net', 'http://192.168.2.79:8000']# Application definition
 
 INSTALLED_APPS = [
     'expenditure_register.apps.ExpenditureRegisterConfig',
