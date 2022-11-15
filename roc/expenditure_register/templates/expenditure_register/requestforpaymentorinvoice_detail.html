@@ -1,0 +1,90 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<h2> Στοιχεία Μητρώου Δέσμευσης </h2>
+<fieldset> 
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Δεδομένα </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> Υποχρέωση προς  </td> 
+                <td> {{ object.owned_to }} </td>
+            </tr>
+            <tr> 
+                <td> Αριθμός απόφασης ανάληψης υποχρέωσης  </td> 
+                <td> {{ object.debit }} </td>
+            </tr>
+            <tr> 
+                <td> Α.Φ.Μ. </td> 
+                <td> {{ object.afm }} </td>
+            </tr>
+            <tr> 
+                <td> Πιστωτής μόνιμα εγκατεστημένος στην αλλοδαπή </td> 
+                <td> {{ object.creditor_is_abroad }} </td>
+            </tr>
+            <tr> 
+                <td> Εμπορική Συναλλαγή </td> 
+                <td> {{ object.transaction_is_commercial }} </td>
+            </tr>
+            <tr> 
+                <td> Σειρά τιμολογίου ή άλλου φορολογικού στοιχείου </td> 
+                <td> {{ object.invoice_series }} </td>
+            </tr>
+            <tr> 
+                <td> Αριθμός Τιμολογίου ή άλλου ισοδύναμου εγγράφου </td> 
+                <td> {{ object.invoice_number }} </td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία έκδοσης τιμολογίου ή ισοδύναμου εγγράφου  </td> 
+                <td> {{ object.invoice_date }} </td>
+            </tr>
+            <tr> 
+                <td> Ποσό τιμολογίου ή ισοδύναμου εγγράφου (€) </td> 
+                <td> {{ object.invoice_charge_amount }} (€)</td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία παραλαβής τιμολογίου ή ισοδύναμου εγγράφου </td> 
+                <td> {{ object.invoice_reception_date }} </td>
+            </tr>
+            <tr> 
+                <td>  Ημερομηνία παραλαβής αγαθών, υπηρεσιών ή εργασιών </td> 
+                <td> {{ object.service_reception_date }} </td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία έγκρισης παραλαβής αγαθών, υπηρεσιών ή εργασιών </td> 
+                <td> {{ object.service_acceptance_verification_date }} </td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία λήξης προθεσμίας πληρωμής </td> 
+                <td> {{ object.payment_due_date }} </td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία δημιουργίας υποχρέωσης </td> 
+                <td> {{ object.obligation_creation_date }} </td>
+            </tr>
+            <tr> 
+                <td> Ημερομηνία έναρξης ωρίμανσης </td> 
+                <td> {{ object.computed_maturation_start_date }} </td>
+            </tr>
+            
+            <tr> 
+                <td> Πληρωμή μέσω Πάγιας Προκαταβολής </td> 
+                <td> {{ object.payment_in_advance }} </td>
+            </tr>
+           </tbody>
+    </table>
+</fieldset>
+<a href="{% url 'invoice_list' register.pk account.pk debit.pk %}" class="btn btn-secondary"> Επιστροφή </a>
+</div><br>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

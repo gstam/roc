@@ -1,0 +1,12 @@
+{% extends 'expenditure_register/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <h1>Στοιχεία Δέσμευσης</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}        
+        <a href="{% url 'debit_list' register.pk account.pk %}" class="btn btn-secondary"> Ακύρωση </a>
+        <input type="submit" value="Αποθήκευση" class="btn btn-primary btn-md">
+    </form>
+{% endblock content %}

@@ -1,0 +1,192 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+
+<br>
+<fieldset> 
+    <legend style="text-align: center"> Μητρώο Δέσμευσης </legend>
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Τιμές </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>  
+                <td> Οικονομικό Έτος </td> 
+                <td> {{ register.year |stringformat:"i" }} </td>
+            </tr>
+            {% comment %} <tr> 
+                <td> Φορέας </td> 
+                <td> {{ register.organization }} </td>
+            </tr>
+            <tr> 
+                <td> Ειδικός Φορέας </td> 
+                <td> {{ register.special_organization }} </td>
+            </tr> {% endcomment %}
+        </tbody>
+    </table>
+</fieldset>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+Chart.register(ChartDataLabels);
+function create_chart(chart_name, data, myTitle) {
+    const ctx = document.getElementById(chart_name).getContext('2d');
+    const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Πιστώσεις', 'Δεσμεύσεις', 'Τιμολόγια', 'Πληρωμές', 'Απλήρωτες υποχρεώσεις', 'Εκκρεμείς Δεσμεύσεις', 'Διαθέσιμη Πίστωση', 'Ανακλήσεις', 'Ανακλήσιμα'],
+        datasets: [{
+            data: data,
+//          label:label,
+            backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(150, 100, 255, 0.2)',
+            'rgba(200, 100, 255, 0.2)',
+            'rgba(240, 90, 255, 0.2)',
+            'rgba(40, 100, 206, 0.2)'
+            ],
+            borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(150, 100, 255)',
+            'rgb(200, 100, 255)',
+            'rgb240, 90, 200)',
+            'rgb(40, 100, 206)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: false,
+        indexAxis: 'y',
+        layout: {
+            padding: {right: 70}
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        labels: {
+            font: {
+                size: 16
+            }
+        },
+        plugins:{
+            legend: {
+                display: false,
+                labels: {
+                    color: 'rgb(0, 0, 0)'
+                }
+            },
+            title: {
+                display: true,
+                text: myTitle,
+                font: {
+                    weight: 'bold',
+                    size: 16,
+                  },
+                padding: {
+                    top: 10,
+                    bottom: 10
+                }
+            },
+            datalabels: {
+                color: 'black',
+                align: 'right',
+                anchor: 'end',
+                display: 'true',
+                font: {
+                    weight: 'bold',
+                    size: 14,
+                  },
+                formatter: function(value, context) {
+                    return value + ' €';
+                },
+            }
+        },
+    }
+});
+}
+</script> 
+
+</fieldset>
+<form  action="{% url 'account_list' register.pk %}" method="GET">
+    <div class="form-group row mt-2">
+    {% comment %} <label for="account_selection" style="text-align: center"> Επιλογή Λογαριασμού (ΑΛΕ) </label> {% endcomment %}
+    <legend style="text-align: center"> Επιλογή Λογαριασμού (ΑΛΕ)  </legend>
+    <select class="form-control" id="account_selection" name="account_selection">
+        <option value='ΟΛΟΙ' {% if selected_account_type == 'ΟΛΟΙ' %}  selected="selected"  {% endif %}> ΟΛΟΙ </option>
+        {% for account_type in account_selection %}
+        <option value="{{account_type}}" {% if selected_account_type == account_type %}  selected="selected"  {% endif %}> {{account_type}} </option>    
+        {% endfor %}
+    </select>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary  mt-2"> Προβολή </button>
+</form>
+</fieldset>
+
+<fieldset > 
+    <legend style="text-align: center"> Λογαριασμοί Εξόδου (ΑΛΕ) </legend> 
+    <table class="table table-light table-striped table-sm">
+        <thead>
+           <tr>
+                {% comment %} <th scope="col" style="text-align: right"> Αριθμός ΑΛΕ </th> {% endcomment %}
+                {% comment %} <th scope="col" style="text-align: right"> Υποκατηγορία </th> {% endcomment %}
+                <th scope="col" style="text-align: center"> Ποσά </th>
+                <th scope="col" style="text-align: center"> Λειτουργίες ΑΛΕ </th> 
+                {% comment %} <th scope="col" style="text-align: center"> Δεσμεύσεις </th>  {% endcomment %}
+                {% comment %} <th scope="col" style="text-align: center"> Ανακλήσεις </th>  {% endcomment %}
+                <th scope="col" style="text-align: center"> Επεξεργασία ΑΛΕ</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for account, total_credit, total_debit, total_residual_credit_list, total_recall, total_invoice, total_amount_to_recall, total_payment, total_pending_debits, total_pending_payments in data_list %}
+            <tr>
+                {% comment %} <td> {{ forloop.counter }} </td> {% endcomment %}
+                {% comment %} <td style="text-align: right"> {{ account.number }} </td> {% endcomment %}
+                {% comment %} <td style="text-align: right"> {{ account.subcategory }} </td> {% endcomment %}
+                <td colspan="1">
+                    <div class="chartBox" >
+                        <canvas id="myChart_{{ forloop.counter }}" width='650' height='250'> </canvas>
+                    </div>
+                </td>
+                <td style="text-align: left;"> 
+                    <a title="Προβολή Πιστώσεων" href = "{% url 'credit_list' register.pk account.pk %}" class="btn btn-primary ml-1" style="margin-bottom: 5px;"> <i class="bi bi-list"> Πιστώσεις </i></a>                 
+                    <a title="Προβολή Δεσμεύσεων" href = "{% url 'debit_list' register.pk account.pk %}" class="btn btn-secondary ml-1" style="margin-bottom: 5px;"> <i class="bi bi-list"> Δεσμεύσεις </i></a>               
+                    <a title="Προβολή Ανακλήσεων" href = "{% url 'recall_list' register.pk account.pk %}" class="btn btn-warning ml-1" style="margin-bottom: 5px;"> <i class="bi bi-list"> Ανακλήσεις </i></a>              
+                </td>
+                    <td style="text-align: center">
+                        <a title="Επεξεργασία ΑΛΕ" href = "{% url 'account_update' register.pk account.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a>                 
+                        <a title="Διαγραφή ΑΛΕ" href = "{% url 'account_delete' register.pk account.pk %}" class="btn btn-danger ml-1"> <i class="bi bi-trash"> </i></a>                 
+                    </td>
+                <script>
+                    var chart_name = 'myChart_';
+                    var data = [{{ total_credit | safe}}, {{ total_debit | safe}}, {{ total_invoice | safe}}, {{ total_payment  | safe}}, {{ total_pending_payments | safe}}, {{total_pending_debits | safe }}, {{ total_residual_credit_list | safe}}, {{ total_recall  | safe}}, {{ total_amount_to_recall | safe}}];
+//                  var label = [String({{ account.number | safe }})];
+                    var title = '{{ account.subcategory | safe }} ({{ account.number | safe }})' //[String({{ account.subcategory | safe }})];
+                    create_chart(chart_name.concat({{ forloop.counter | safe }}), data, title );
+                </script>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+
+<a href="{% url 'register_list' %}" class="btn btn-secondary"> Επιστροφή </a>
+<a title="Δημιουργία ΑΛΕ" href = "{% url 'account_create' register.pk %}" class="btn btn-primary ml-1"> Δημιουργία ΑΛΕ </a>                 
+</div><br>
+{% endblock content %}
+

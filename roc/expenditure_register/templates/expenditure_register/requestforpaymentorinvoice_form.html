@@ -1,0 +1,70 @@
+{% extends 'expenditure_register/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <h1>Καταχώρηση Τιμολογίου ή ισοδύναμου εγγράφου</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}        
+        <a href="{% url 'invoice_list' register.pk account.pk debit.pk%}" class="btn btn-secondary">Ακύρωση</a>
+        <input type="submit" value="Αποθήκευση" class="bth btn-primary">
+    </form>
+    
+    <script>
+        function js_is_commercial(){
+            //get ("Commercial Transaction");
+            const checkBox = document.getElementById("id_transaction_is_commercial");
+            // Get the output text
+            const service_reception_date = document.getElementById("id_service_reception_date");
+            const service_acceptance_verification_date = document.getElementById("id_service_acceptance_verification_date");
+            const computed_payment_due_date = document.getElementById("id_computed_payment_due_date");
+
+            if (checkBox.checked == true){
+                service_reception_date.removeAttribute('readonly');
+                service_acceptance_verification_date.removeAttribute('readonly');
+                computed_payment_due_date.removeAttribute('readonly');
+            }
+            else {
+                service_reception_date.setAttribute('readonly','true');
+                service_acceptance_verification_date.setAttribute('readonly','true');
+                computed_payment_due_date.setAttribute('readonly','true');
+            }
+        }
+
+        function js_invoice_created_by_us(){
+            //get ("Commercial Transaction");
+            const checkBox = document.getElementById("id_invoice_created_by_us");
+            // Get the output text
+            const invoice_date = document.getElementById("id_invoice_date");
+            const invoice_reception_date = document.getElementById("id_invoice_reception_date");
+            const payment_due_date = document.getElementById("id_payment_due_date");
+            const obligation_creation_date = document.getElementById("id_obligation_creation_date");
+            const computed_maturation_start_date = document.getElementById("id_computed_maturation_start_date");
+            
+            
+            if (checkBox.checked == true){
+                const invoice_creation_dateString = invoice_date.value;
+                const invoice_creation_dateParts = invoice_creation_dateString.split("/");
+                const invoice_creation_date = new Date(+invoice_creation_dateParts[2], invoice_creation_dateParts[1] - 1, +invoice_creation_dateParts[0]); 
+
+                var invoice_maturation_date = new Date(+invoice_creation_dateParts[2], invoice_creation_dateParts[1] - 1, +invoice_creation_dateParts[0]);
+                invoice_maturation_date.setDate(invoice_maturation_date.getDate() + 1);
+              
+                var invoice_payment_due_date = new Date(+invoice_creation_dateParts[2], invoice_creation_dateParts[1] - 1, +invoice_creation_dateParts[0]);
+                invoice_payment_due_date.setDate(invoice_payment_due_date.getDate() + 30);
+
+                invoice_reception_date.value = invoice_creation_date.toLocaleDateString('el-GR');
+                payment_due_date.value = invoice_payment_due_date.toLocaleDateString('el-GR');
+                obligation_creation_date.value = invoice_creation_date.toLocaleDateString('el-GR');
+                computed_maturation_start_date.value = invoice_maturation_date.toLocaleDateString('el-GR');
+            }
+            else {
+                invoice_reception_date.value = "";
+                payment_due_date.value = "";
+                obligation_creation_date.value = "";
+                computed_maturation_start_date.value = "";
+            }
+        }
+    </script>
+
+{% endblock content %}

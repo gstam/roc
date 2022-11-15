@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    #command: "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_roc
+      MYSQL_USER: roc_user
+      MYSQL_PASSWORD: roc_pass
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u$$MYSQL_USER", "-p$$MYSQL_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 2
+    networks:
+      - back-tier
+
+  web:
+    build: .
+    restart: always
+    environment:
+      ENVIRONMENT: dev
+      WEB_CONCURRENCY: 1
+      CODE_RELOAD: true
+      DJANGO_SETTINGS_MODULE: config.settings
+      DB_HOST: db
+      DB_NAME: db_roc
+      DB_USER: roc_user
+      DB_PASS: roc_pass
+    volumes:
+      - ./roc:/roc
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:80"
+    networks:
+      - front-tier
+      - back-tier
+
+volumes:
+  db-data: {}
+
+networks:
+  front-tier: {}
+  back-tier: {}

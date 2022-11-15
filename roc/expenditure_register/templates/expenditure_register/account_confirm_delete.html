@@ -1,0 +1,48 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+
+<h2> Διαγραφή ΑΛΕ: </h2>
+<fieldset> 
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Δεδομένα </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> Μητρώο </td> 
+                <td> {{ object.expenditure_register }} </td>
+            </tr>
+            <tr> 
+                <td> ΑΛΕ </td> 
+                <td> {{ object.number }} </td>
+            </tr>
+            <tr> 
+                <td> Κατηγορία </td> 
+                <td> {{ object.category }} % </td>
+            </tr>
+            <tr>
+                <td> Υποκατηγορία </td> 
+                <td> {{ object.subcategory }} </td>
+            </tr>
+            <tr>
+                <td> Περιγραφή </td> 
+                <td> {{ object.description }} </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+<form method="post">
+    {% csrf_token %}
+    <a href="{% url 'account_list' register.pk %}" class="btn btn-secondary"> Ακύρωση </a>
+    <input type = "submit" value="Επιβεβαίωση" class="btn btn-danger">
+</form>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

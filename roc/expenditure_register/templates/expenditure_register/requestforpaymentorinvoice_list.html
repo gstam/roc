@@ -1,0 +1,110 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<fieldset> 
+    <legend style="text-align: center"> Στοιχεία Απόφασης Δέσμευσης </legend>
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Τιμές </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> Αριθμός Πρωτοκόλλου </td> 
+                <td> {{ debit.debit_protocol_number }} </td>
+            </tr>
+            <tr>  
+                <td> Ποσό δέσμευσης </td> 
+                <td style="font-weight: bold;"> {{ debit.debit }} €</td>
+            </tr>
+            <tr>  
+                <td> Υπόλοιπο προς δέσμευση </td> 
+                <td style="font-weight: bold; color: DarkBlue;"> {{ debit_balance }} €</td>
+            </tr>
+            {% comment %} <tr> 
+                <td> Φορέας </td> 
+                <td> {{ register.organization }} </td>
+            </tr>
+            <tr> 
+                <td> Ειδικός Φορέας </td> 
+                <td> {{ register.special_organization }} </td>
+            </tr> {% endcomment %}
+        </tbody>
+    </table>
+</fieldset>
+<fieldset> 
+    <legend style="text-align: center"> Τιμολόγια ή ισοδύναμα έγγραφα </legend> 
+    <table class="table table-light table-sm">
+        <caption>Τιμολόγια ή ισοδύναμα έγγραφα</caption>
+        <thead>
+            <tr>
+                {% comment %} <th scope="col"> Μητρώο Δεσμεύσεων </th> {% endcomment %}
+                {% comment %} <th scope="col"> Αριθμός ΑΛΕ </th>                 {% endcomment %}
+                <th scole="col"> # </th>
+                <th scope="col"> Αριθμός απόφασης δέσμευσης </th>
+                <th scope="col"> Α.Φ.Μ. </th>
+                {% comment %} <th scope="col"> Πιστωτής μόνιμα εγκατεστημένος στην αλλοδαπή </th> {% endcomment %}
+                {% comment %} <th scope="col"> Εμπορική Συναλλαγή </th> {% endcomment %}
+                {% comment %} <th scope="col"> Σειρά τιμολογίου ή άλλου φορολογικού στοιχείου </th> {% endcomment %}
+                <th scope="col"> Αριθμός </th>
+                <th scope="col"> Ημερομηνία έκδοσης  </th>
+                <th scope="col"> Ποσό (€) </th>
+                {% comment %} <th scope="col"> Ημερομηνία παραλαβής τιμολογίου ή ισοδύναμου εγγράφου </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία παραλαβής αγαθών, υπηρεσιών ή εργασιών </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία έγκρισης παραλαβής αγαθών, υπηρεσιών ή εργασιών </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία λήξης προθεσμίας πληρωμής </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία δημιουργίας υποχρέωσης </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία έναρξης ωρίμανσης </th> {% endcomment %}
+                {% comment %} <th scope="col"> Ημερομηνία δημιουργίας υποχρέωσης </th> {% endcomment %}
+                {% comment %} <th scope="col"> Πληρωμή μέσω Πάγιας Προκαταβολής </th> {% endcomment %}
+                <th scope="col" style="text-align: center"> Λειτουργίες </th> 
+                <th scope="col" style="text-align: center"> Πληρωμή</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice, payment_status  in data_list %}
+                {% if payment_status == "ΕΞΟΦΛΗΣΗ" %}
+                    <tr class="table-success">
+                {% elif payment_status == "ΑΚΥΡΩΣΗ" %}
+                    <tr class="table-secondary"> 
+                {% elif payment_status == "ΑΠΟΡΡΙΨΗ" %}
+                     <tr class="table-danger"> 
+                {% else %}
+                     <tr class="table-warning">
+                {% endif%}
+                    <td> {{ forloop.counter }} </td>
+                    <td> {{ invoice.debit }} </td>
+                    <td> {{ invoice.afm }} </td>
+                    <td> {{ invoice.invoice_number }} </td>
+                    <td> {{ invoice.invoice_date }} </td>
+                    <td> {{ invoice.invoice_charge_amount }} </td>
+                    <td style="text-align: center"> 
+                        <a title="Λεπτομέριες τιμολογίου" href = "{% url 'invoice_detail' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-eyeglasses"> </i></a>
+                        <a title="Επεξεργασία τιμολογίου" href = "{% url 'invoice_update' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a>
+                        <a title="Διαγραφή τιμολογίου" href = "{% url 'invoice_delete' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-danger ml-1"> <i class="bi bi-trash"> </i></a>
+                    </td>
+                    <td style="text-align: center"> 
+                        {% if invoice.invoice_charge_amount > 0 %}
+                        <a title="Λίστα πληρωμών" href = "{% url 'payment_list' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-eyeglasses"> </i></a>
+                        {% comment %} <a title="Καταχώρηση πληρωμής" href = "{% url 'payment_create' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a> {% endcomment %}
+                        {% comment %} <a title="Διαγραφή πληρωμής" href = "{% url 'payment_delete' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-danger ml-1"> <i class="bi bi-trash"> </i></a> {% endcomment %}
+                        {% endif %}
+                    </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+<a href="{% url 'debit_list' register.pk account.pk %}" class="btn btn-secondary"> Επιστροφή </a>
+<a title="Καταχώρηση Τιμολογίου" href = "{% url 'invoice_create' register.pk account.pk debit.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-cash-stack"> Καταχώρηση Τιμολογίου </i></a>
+</div><br>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

@@ -1,0 +1,54 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<fieldset> 
+    <legend style="text-align:center"> Διαγραφή Δέσμευσης </legend>
+    {%if not_ok_to_delete%}
+        <legend style="background-color:pink;color:red;text-align:center"> Προσοχή! <br> Υπάρχουν τιμολόγια και πληρωμές που σχετίζονται με αυτή τη Δέσμευση! <br> Αν προχωρήσετε θα διαγραφούν και αυτά! </legend>
+    {% endif %}
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Δεδομένα </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> ΑΛΕ </td> 
+                <td> {{ object.account }} </td>
+            </tr>
+            <tr> 
+                <td> Ποσό Δέσμευσης </td> 
+                <td> {{ object.debit }} € </td>
+            </tr>
+            <tr> 
+                <td> Αριθμός πρωτοκόλλου ανάληψης υποχρέωσης </td> 
+                <td> {{ object.debit_protocol_number }} % </td>
+            </tr>
+            <tr>
+                <td> Ημερομηνία Ανάληψης Υποχρέωσης </td> 
+                <td> {{ object.debit_date }} </td>
+            </tr>
+            <tr>
+                <td> ΑΔΑ </td> 
+                <td> {{ object.diavgeia_string }} </td>
+            </tr>
+            <tr>
+                <td> Ημερομηνία Ανάρτησης στη Διαύγεια </td> 
+                <td> {{ object.diavgeia_date }} </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+<form method="post">
+    {% csrf_token %}
+    <a href="{% url 'credit_list' register.pk account.pk %}" class="btn btn-secondary"> Ακύρωση </a>
+    <input type = "submit" value="Επιβεβαίωση" class="btn btn-danger">
+</form>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

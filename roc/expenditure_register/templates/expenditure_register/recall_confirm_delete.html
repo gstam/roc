@@ -1,0 +1,52 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<h2> Διαγραφή Ανάκλησης: </h2>
+<fieldset> 
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Δεδομένα </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> ΑΛΕ </td> 
+                <td> {{ object.account }} </td>
+            </tr>
+            <tr> 
+                <td> Ποσό ανάκλησης </td> 
+                <td> {{ object.recall }} € </td>
+            </tr>
+            <tr> 
+                <td> Αριθμός Πρωτοκόλλου </td> 
+                <td> {{ object.recall_protocol_number }} % </td>
+            </tr>
+            <tr>
+                <td> Ημερομηνία Ανάκλησης </td> 
+                <td> {{ object.recall_date }} </td>
+            </tr>
+            <tr>
+                <td> ΑΔΑ </td> 
+                <td> {{ object.diavgeia_string }} </td>
+            </tr>
+            <tr>
+                <td> Ημερομηνία ανάρτησης στη Διαύγεια </td> 
+                <td> {{ object.diavgeia_date }} </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+<form method="post">
+    {% csrf_token %}
+    <a href="{% url 'recall_list' register.pk account.pk %}" class="btn btn-secondary"> Ακύρωση </a>
+    <input type = "submit" value="Επιβεβαίωση" class="btn btn-danger">
+</form>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

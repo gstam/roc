@@ -1,0 +1,49 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+{% if ok_to_delete %}
+<br>
+<h2> Διαγραφή Πίστωσης: </h2>
+<fieldset> 
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Δεδομένα </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> ΑΛΕ </td> 
+                <td> {{ object.account }} </td>
+            </tr>
+            <tr> 
+                <td> Πίστωση </td> 
+                <td> {{ object.credit }} € </td>
+            </tr>
+            <tr> 
+                <td> Ποσοστό διάθεσης </td> 
+                <td> {{ object.disposed_percentage }} % </td>
+            </tr>
+            <tr>
+                <td> Ημερομηνία Διάθεσης </td> 
+                <td> {{ object.date_of_disposal }} </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+<form method="post">
+    {% csrf_token %}
+    <a href="{% url 'credit_list' register.pk account.pk %}" class="btn btn-secondary"> Ακύρωση </a>
+    <input type = "submit" value="Επιβεβαίωση" class="btn btn-danger">
+</form>
+{%elif not_ok_to_delete%}
+    <h2 style="background-color:pink;color:red;text-align:center"> Δεν μπορείτε να διαγράψετε την πίστωση. Οι συνολικές δεσμεύσεις ή αναλήψεις υποχρέωσης θα ξεπερνούν τη συνολική πίστωση μετά την διαγραφή. </h2>
+    <a href="{% url 'credit_list' register.pk account.pk %}" class="btn btn-secondary"> Επιστροφή </a>
+{% endif %}
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

@@ -1,0 +1,92 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<fieldset> 
+    <legend style="text-align: center"> Στοιχεία Τιμολογίου </legend>
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Τιμές </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr> 
+                <td> Αριθμός Τιμολογίου </td> 
+                <td> {{ invoice.invoice_number }} </td>
+            </tr>
+            <tr>  
+                <td> Ποσό Τιμολογίου </td> 
+                <td style="font-weight: bold;"> {{ invoice.invoice_charge_amount }} €</td>
+            </tr>
+            {% comment %} <tr>  
+                <td> Υπόλοιπο προς δέσμευση </td> 
+                <td style="font-weight: bold; color: DarkBlue;"> {{ debit_balance }} €</td>
+            </tr> {% endcomment %}
+            {% comment %} <tr> 
+                <td> Φορέας </td> 
+                <td> {{ register.organization }} </td>
+            </tr>
+            <tr> 
+                <td> Ειδικός Φορέας </td> 
+                <td> {{ register.special_organization }} </td>
+            </tr> {% endcomment %}
+        </tbody>
+    </table>
+</fieldset>
+<fieldset> 
+    <legend style="text-align: center"> Πληρωμές </legend> 
+    <table class="table table-light table-striped table-sm">
+        <thead>
+            <tr>
+                <th scole="col"> # </th>
+                <th scope="col"> Τιμολόγιο </th>
+                <th scope="col"> Διαχείριση </th>
+                <th scope="col"> Αριθμός παραστατικού πληρωμής </th>
+                <th scope="col"> Είδος παραστατικού </th>
+                <th scope="col"> Ημερομηνία </th>
+                <th scope="col"> Ποσό (€) </th>
+                <th scope="col"> Ληξιπρόθεσμο (90)(€) </th>
+                <th scope="col"> Συμψηφισμοί(€) </th>
+                {% comment %} <th scope="col" style="text-align: center"> Λειτουργίες Τιμολογίου</th> {% endcomment %}
+                <th scope="col" style="text-align: center"> Λειτουργίες Πληρωμών</th>  
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment  in object_list %}
+                <tr>
+                    <td> {{ forloop.counter }} </td>
+                    <td> {{ payment.invoice }} </td>
+                    <td> {{ payment.payment_type_choice }} </td>
+                    <td> {{ payment.number }} </td>
+                    <td> {{ payment.document_type }} </td>
+                    <td> {{ payment.date }} </td>
+                    <td> {{ payment.payment_amount }} </td>
+                    <td> {{ payment.payment_amount_to_third_persons }} </td>
+                    <td> {{ payment.setoff_payment_amount }} </td>
+                    {% comment %} <td style="text-align: center">  {% endcomment %}
+                        {% comment %} <a title="Λεπτομέριες τιμολογίου" href = "{% url 'invoice_detail' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-eyeglasses"> </i></a> {% endcomment %}
+                        {% comment %} <a title="Επεξεργασία τιμολογίου" href = "{% url 'invoice_update' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a> {% endcomment %}
+                        {% comment %} <a title="Διαγραφή τιμολογίου" href = "{% url 'invoice_delete' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-danger ml-1"> <i class="bi bi-trash"> </i></a> {% endcomment %}
+                    {% comment %} </td> {% endcomment %}
+                    <td style="text-align: center"> 
+                        {% comment %} <a title="Καταχώρηση πληρωμής" href = "{% url 'payment_create' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a> {% endcomment %}
+                        <a title="Λεπτομέρειες πληρωμής" href = "{% url 'payment_detail' register.pk account.pk debit.pk invoice.pk payment.pk%}" class="btn btn-primary ml-1"> <i class="bi bi-eyeglasses"> </i></a>
+                        <a title="Επεξεργασία πληρωμής" href = "{% url 'payment_update' register.pk account.pk debit.pk invoice.pk payment.pk%}" class="btn btn-primary ml-1"> <i class="bi bi-pencil"> </i></a>
+                        <a title="Διαγραφή πληρωμής" href = "{% url 'payment_delete' register.pk account.pk debit.pk invoice.pk payment.pk %}" class="btn btn-danger ml-1"> <i class="bi bi-trash"> </i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+<a href="{% url 'invoice_list' register.pk account.pk debit.pk%}" class="btn btn-secondary"> Επιστροφή </a>
+<a title="Καταχώρηση Πληρωμής" href = "{% url 'payment_create' register.pk account.pk debit.pk invoice.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-cash-stack"> Καταχώρηση Πληρωμής </i></a>
+</div><br>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

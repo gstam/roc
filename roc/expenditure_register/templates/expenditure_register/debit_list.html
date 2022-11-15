@@ -1,0 +1,87 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<fieldset> 
+    <legend style="text-align: center"> Στοιχεία ΑΛΕ </legend>
+    <table class="table table-light table-striped">
+        <thead>
+            <tr> 
+                <td> Αριθμός </td> 
+                <td> Υποκατηγορία </td>
+            </tr>
+        </thead> 
+        <tbody>
+            
+            <tr>  
+                <td><strong> {{ account.number }} </strong></td> 
+                <td><strong> {{ account.subcategory }} </strong></td>
+            </tr>
+            {% comment %} <tr> 
+                <td> Φορέας </td> 
+                <td> {{ register.organization }} </td>
+            </tr>
+            <tr> 
+                <td> Ειδικός Φορέας </td> 
+                <td> {{ register.special_organization }} </td>
+            </tr> {% endcomment %}
+        </tbody>
+    </table>
+</fieldset>
+<fieldset> 
+    <legend style="text-align: center"> Δεσμεύσεις ΑΛΕ</legend> 
+    <table class="table table-light table-striped table-sm">
+        <thead>
+            <tr>
+                {% comment %} <th scope="col"> Μητρώο Δεσμεύσεων </th> {% endcomment %}
+                {% comment %} <th scope="col"> Αριθμός ΑΛΕ </th> {% endcomment %}
+                <th scole="col"> # </th>
+                <th scope="col"> Ποσό (€) </th>      
+                <th scope="col"> Αριθμός Πρωτοκόλλου </th>      
+                <th scope="col"> Ημερομηνία Δέσμευσης </th>
+                <th scope="col"> ΑΔΑ </th>
+                <th scope="col"> Ημερομηνία ΑΔΑ </th>
+                <th scope="col" style="text-align: center"> Τιμολόγια </th> 
+                <th scope="col" style="text-align: center"> Λειτουργίες Δεσμεύσεων</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for debit in object_list %}
+                <tr>
+                    {% comment %} <td> {{ account.expenditure_register }} </td> {% endcomment %}
+                    {% comment %} <td> {{ debit.account }} </td> {% endcomment %}
+                    <td> {{ forloop.counter }} </td>
+                    <td> {{ debit.debit }} </td>
+                    <td> {{ debit.debit_protocol_number }} </td>
+                    <td> {{ debit.debit_date }} </td>
+                    <td> {{ debit.diavgeia_string }} </td>
+                    <td> {{ debit.diavgeia_date }} </td>
+                    <td style="text-align: center"> 
+                        <a title="Προβολή τιμολογίων" href = "{% url 'invoice_list' register.pk account.pk debit.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-list"> </i></a>
+                        {% comment %} <a title="Καταχώρηση Τιμολογίου" href = "{% url 'invoice_create' register.pk account.pk debit.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-vector-pen"> </i></a> {% endcomment %}
+                        {% comment %} <a title="Α.Λ.Ε." href = "{% url '' registry.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-building"> </i>  </a>                  {% endcomment %}
+                        {% comment %} <a title="Επεξεργασία" href = "{% url 'debit_detail' debit.pk %}"  class="btn btn-primary"> <i class="bi bi-pencil"> </i> </a>  {% endcomment %}
+                        {% comment %} <a title="Επεξεργασία" href = "{% url 'debit_update' register.pk account.pk debit.pk %}"  class="btn btn-primary"> <i class="bi bi-pencil"> </i> </a>  {% endcomment %}
+                        {% comment %} <a title="Διαγραφή" href = "{% url 'debit_delete' register.pk account.pk debit.pk %}"  class="btn btn-danger"> <i class="bi bi-trash"> </i> </a>  {% endcomment %}
+                    </td>
+                    <td style="text-align: center"> 
+                        {% comment %} <a title="Καταχώρηση Πίστωσης" href = "{% url '' account.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-vector-pen"> </i></a> {% endcomment %}
+                        {% comment %} <a title="Α.Λ.Ε." href = "{% url '' registry.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-building"> </i>  </a>                  {% endcomment %}
+                        {% comment %} <a title="Επεξεργασία" href = "{% url 'debit_detail' debit.pk %}"  class="btn btn-primary"> <i class="bi bi-pencil"> </i> </a>  {% endcomment %}
+                        <a title="Επεξεργασία" href = "{% url 'debit_update' register.pk account.pk debit.pk %}"  class="btn btn-primary"> <i class="bi bi-pencil"> </i> </a> 
+                        <a title="Διαγραφή" href = "{% url 'debit_delete' register.pk account.pk debit.pk %}"  class="btn btn-danger"> <i class="bi bi-trash"> </i> </a> 
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+<a href="{% url 'account_list' register.pk %}" class="btn btn-secondary"> Επιστροφή </a>
+<a title="Καταχώρηση Δέσμευσης" href = "{% url 'debit_create' register.pk account.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-cash-stack"> Καταχώρηση Δέσμευσης </i></a>
+</div><br>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

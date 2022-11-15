@@ -1,0 +1,45 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}    
+<br>
+<fieldset> 
+    <legend style="text-align: center">  Μητρώα Δεσμεύσεων </legend> 
+    <table class="table table-light table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col"> Οικονομικό έτος </th>
+                <th scope="col"> Τύπος προϋπολογισμού </th>                
+                <th scope="col"> Φορέας </th>      
+                <th scope="col"> Ειδικός Φορέας </th>
+                <th scope="col" style="text-align: center"> ΑΛΕ</th> 
+                <th scope="col" style="text-align: center"> Λειτουργίες Μητρώου</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for registry in object_list %}
+                <tr>
+                    <td> {{ registry.year }} </td>
+                    <td> {{ registry.budget_type }} </td>
+                    <td> {{ registry.organization }} </td>
+                    <td> {{ registry.special_organization }} </td> 
+                    <td style="text-align: center"> 
+                        <a title="Προβολή ΑΛΕ" href = "{% url 'account_list' registry.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-list"> </i>  </a>                 
+                        <a title="Αναφορά" href = "{% url 'register_report' registry.pk %}" class="btn btn-primary ml-1"> <i class="bi bi-download"> </i>  </a>
+                    </td>
+                    <td style="text-align: center"> 
+                        <a title="Επεξεργασία" href = "{% url 'register_update' registry.pk %}"  class="btn btn-primary"> <i class="bi bi-pencil"> </i> </a> 
+                        <a title="Διαγραφή" href = "{% url 'register_delete' registry.pk %}"  class="btn btn-danger"> <i class="bi bi-trash"> </i> </a> 
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+{% comment %} <a href="{% url 'home' %}" class="btn btn-secondary"> Επιστροφή </a> {% endcomment %}
+</div><br>
+{% endblock content %}
+
+{% comment %} <a href="{% url 'professor_contract_update' object.id %}" class="btn btn-warning"> Επεξεργασία </a>
+<div class="float-right"> {% endcomment %}
+    {% comment %} <a href = "{% url 'school_assignment_list_view' object.id %}" class="btn btn-primary"> Υπηρετήσεις </a> {% endcomment %}

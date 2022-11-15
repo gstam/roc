@@ -1,0 +1,130 @@
+<!-- templates/teacher_new.html -->
+{% extends 'expenditure_register/base.html' %}
+
+{% block content %}
+<br>
+<fieldset> 
+    <legend style="text-align: center"> Μητρώο Δέσμευσης </legend>
+    <table class="table table-light table-striped">
+        <thead>
+        <tr>
+            <th scope="col"> Στοιχεία </th>
+            <th scope="col"> Τιμές </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>  
+                <td> Οικονομικό Έτος </td> 
+                <td> {{ register.year }} </td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+
+{% comment %} {% if current_month == 1 %}
+    <h1 style="text-align: center;color: red"> Ο Ιανουάριος δεν έχει ολοκληρωθεί. <br> Τα πλήρη δεδομένα για τον Ιανουάριο θα είναι διαθέσιμα από <br> 1η Φεβρουαρίου!</h1>
+{% endif %} {% endcomment %}
+
+
+<fieldset>
+<form  action="{% url 'register_report' register.pk %}" method="GET">
+    <div class="form-group row mt-2">
+    {% comment %} <label for="account_selection" style="text-align: center"> Επιλογή Λογαριασμού (ΑΛΕ) </label> {% endcomment %}
+    <legend style="text-align: left"> Προβολή στοιχείων του Μητρώου Δεσμεύσεων έως και την τελευταία ημέρα του μήνα: </legend>
+    <select class="form-control" id="month_selection" name="month_selection">
+        {% for month in valid_months %}
+            <option value="{{month.0}}" {% if month.0 == reference_month  %}  selected="selected"  {% endif %}> {{month.1}} </option>    
+        {% endfor %}
+    </select>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary  mt-2"> Προβολή </button>
+</form>
+</fieldset>
+
+
+<fieldset> 
+    <legend style="text-align: center"> Λογαριασμοί Εξόδου (ΑΛΕ) </legend> 
+    <table class="table table-light table-striped table-lg">
+        <thead>
+           <tr>
+                <th scope="col" style="text-align: right"> Έτος (4)  </th>
+                <th scope="col" style="text-align: right"> Περίοδος (3) </th>
+                <th scope="col" style="text-align: right"> Κατηγορία Π/Υ (3)</th>
+                <th scope="col" style="text-align: right"> Φορέας (2) </th>
+                <th scope="col" style="text-align: right"> Ειδικός Φορέας </th>
+                <th scope="col" style="text-align: right"> ΑΛΕ (4)  </th>
+                <th scope="col" style="text-align: right"> (4) Εγκεκριμένη Πίστωση Π/Υ (5) </th>
+                <th scope="col" style="text-align: right"> (5) Αναμόρφωση Π/Υ (+/-) </th>
+                <th scope="col" style="text-align: right"> (6) Διαμόρφωση Π/Υ = (4)+(5) </th>
+                <th scope="col" style="text-align: right"> (7) Ποσοστό Διάθεσης Πιστώσεων </th>
+                <th scope="col" style="text-align: right"> (11) Ανειλλημμένη Δέσμευση (Ποσό Δέσμευσης) </th>
+                <th scope="col" style="text-align: right"> (12) Υπολειπόμενη προς Διάθεση πίστωση (12)=(6)*(7)-(11) </th>
+                <th scope="col" style="text-align: right"> (22) Ποσό τιμολογίου ή άλλου ισοδύναμου εγγράφου </th>
+                <th scope="col" style="text-align: right"> (36) Συνολικό Ποσό πληρωμής </th>
+                <th scope="col" style="text-align: right"> (37) Συνολικό ποσό πληρωμής Ληξ. Οφειλ > 90 προς Τρίτους </th>
+                <th scope="col" style="text-align: right"> (38) Εκ του οποίου συμψηφ./παρακρ. Υπέρ του Δημοσ. ή ΟΚΑ </th>
+                <th scope="col" style="text-align: right"> (39) Εκκρεμείς Δεσμεύσεις (39)=(11)-(36) </th>
+                <th scope="col" style="text-align: right"> (40) Σύνολο Απλήρωτων Υποχρεώσεων (40)=(22)-(36) </th>
+                <th scope="col" style="text-align: right"> (41) Απλήρωτες Υποχρεώσεις προς Γενική Κυβέρνηση </th>
+                <th scope="col" style="text-align: right"> (42) Απλήρωτες Υποχρεώσεις προς Τρίτους </th>
+                <th scope="col" style="text-align: right"> (43) Εκκρεμείς Οφειλές προς Γενική Κυβέρνηση 1 - 30 ημ </th>
+                <th scope="col" style="text-align: right"> (44) Εκκρεμείς Οφειλές προς Τρίτους 1 - 30 ημ </th>
+                <th scope="col" style="text-align: right"> (45) Εκκρεμείς Οφειλές προς Γενική Κυβέρνηση 31 - 60 ημ </th>
+                <th scope="col" style="text-align: right"> (46) Εκκρεμείς Οφειλές προς Τρίτους 31 - 60 ημ </th>
+                <th scope="col" style="text-align: right"> (47) Εκκρεμείς Οφειλές προς Γενική Κυβέρνηση 61 - 90 ημ </th>
+                <th scope="col" style="text-align: right"> (48) Εκκρεμείς Οφειλές προς Τρίτους 61 - 90 ημ </th>
+                <th scope="col" style="text-align: right"> (49) Ληξιπρόθεσμες Οφειλές προς Γεν. Κυβέρνηση> 90 ημ </th>
+                <th scope="col" style="text-align: right"> (50) Ληξιπρόθεσμες Οφειλές προς Τρίτους > 90 ημ </th>
+                <th scope="col" style="text-align: right"> (51) Ληξιπρόθεσμες Οφειλές προς Τρίτους μη εγχ. Πιστωτές > 90 ημ </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for account, initial_credit, reformed_credit, total_credit, disposed_percentage_list, total_debit, total_residual_credit_list, total_invoice, total_payment, total_90days_delayed_payment_to_third_parties, total_90days_delayed_setoff_payment_to_third_parties, total_pending_debits, total_pending_payments, invoice_amount_owned_to_general_goverment, total_invoice_amount_owned_to_third_parties, owned_to_goverment_1_to_30_days, owned_to_third_party_1_to_30_days, owned_to_goverment_31_to_60_days, owned_to_third_party_31_to_60_days, owned_to_goverment_61_to_90_days, owned_to_third_party_61_to_90_days, owned_to_goverment_91_to_end_days, owned_to_third_party_91_to_end_days, owned_to_third_party_from_abroad_91_to_end_days in data_list %}
+                <tr>
+                    <td style="text-align: right"> {{ register.year|stringformat:"i"}}  </td>
+                    <td style="text-align: right"> {{ reference_month }} </td>
+                    <td style="text-align: right"> E99 </td>
+                    <td style="text-align: right"> 1019 </td>
+                    <td style="text-align: right"> 206-9922000 </td>
+                    <td style="text-align: right"> {{ account.number|stringformat:"i" }} </td>
+                    <td style="text-align: right"> {{ initial_credit|floatformat:2 }}</td>
+                    <td style="text-align: right"> {{ reformed_credit|floatformat:2  }} </td>
+                    <td style="text-align: right"> {{ total_credit|floatformat:2 }} </td>
+                    <td style="text-align: right"> {{ disposed_percentage_list|floatformat:2 }}</td>
+                    <td style="text-align: right"> {{ total_debit|floatformat:2 }}</td>
+                    <td style="text-align: right"> {{ total_residual_credit_list|floatformat:2 }} </td>
+                    <td style="text-align: right"> {{ total_invoice|floatformat:2 }} </td>
+                    <td style="text-align: right"> {{ total_payment|floatformat:2 }} </td>
+                    <td style="text-align: right"> {{total_90days_delayed_payment_to_third_parties|floatformat:2 }}</td>
+                    <td style="text-align: right"> {{total_90days_delayed_setoff_payment_to_third_parties|floatformat:2 }}</td>
+                    <td style="text-align: right"> {{total_pending_debits|floatformat:2}} </td>
+                    <td style="text-align: right"> {{total_pending_payments|floatformat:2}} </td>
+                    <td style="text-align: right"> {{invoice_amount_owned_to_general_goverment|floatformat:2}} </td> </td>
+                    <td style="text-align: right"> {{total_invoice_amount_owned_to_third_parties|floatformat:2}} </td>
+                    <td style="text-align: right"> {{owned_to_goverment_1_to_30_days|floatformat:2}}</td>
+                    <td style="text-align: right"> {{owned_to_third_party_1_to_30_days|floatformat:2}}</td>
+                    <td style="text-align: right"> {{owned_to_goverment_31_to_60_days|floatformat:2}}</td>
+                    <td style="text-align: right"> {{owned_to_third_party_31_to_60_days|floatformat:2}}</td>
+                    <td style="text-align: right"> {{owned_to_goverment_61_to_90_days|floatformat:2}}</td>
+                    <td style="text-align: right"> {{owned_to_third_party_61_to_90_days|floatformat:2}} </td>
+                    <td style="text-align: right"> {{owned_to_goverment_91_to_end_days|floatformat:2}} </td>
+                    <td style="text-align: right"> {{owned_to_third_party_91_to_end_days|floatformat:2}} </td>
+                    <td style="text-align: right"> {{owned_to_third_party_from_abroad_91_to_end_days|floatformat:2}} </td>
+                    {% comment %} <td style="text-align: right"> {{}} </td> {% endcomment %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+<br>
+<fieldset>
+    {% comment %} <legend style="text-align: left;"> Εξαγωγή δεδομένων σε Excel.</legend> {% endcomment %}
+    <form  style="text-align: left; " action="{% url 'register_report_to_xlsx' register.pk reference_day reference_month reference_year %}" method="GET">
+        <a href="{% url 'register_list' %}" class="btn btn-secondary"> Επιστροφή </a>
+        <button type="submit" name="submit" class="btn btn-success lg"> Δημιουργία Αρχείου Excel </button>
+    </form>
+</fieldset>
+{% comment %} <a title="Δημιουργία ΑΛΕ" href = "{% url 'account_create' register.pk %}" class="btn btn-primary ml-1"> Δημιουργία ΑΛΕ </a>                  {% endcomment %}
+</div>
+{% endblock content %}
+
